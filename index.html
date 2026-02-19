@@ -4,312 +4,192 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hinário Ubuntu</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
-
 <style>
 :root{
-  --primary:#FFC72C;
-  --bg:#0a0a0a;
-  --bg2:#1a1a1a;
-  --card:#2a2a2a;
-  --text:#ffffff;
-  --font:16px;
-}
-
-/* TEMA CLARO */
+--primary:#FFC72C;--bg:#0a0a0a;--bg2:#1a1a1a;--card:#2a2a2a;
+--text:#ffffff;--accent:#FFC72C;--font:16px}
 .light{
-  --bg:#f4f4f4;
-  --bg2:#ffffff;
-  --card:#e6e6e6;
-  --text:#111111;
-}
-
+--bg:#f4f4f4;--bg2:#ffffff;--card:#e6e6e6;
+--text:#111111;--accent:#333333}
 *{box-sizing:border-box;margin:0;padding:0}
 body{
-  background:linear-gradient(135deg,var(--bg),var(--bg2));
-  color:var(--text);
-  font-family:'Crimson Text',serif;
-  font-size:var(--font);
-}
-
-header{
-  display:flex;
-  align-items:center;
-  gap:1rem;
-  padding:1.2rem 1.5rem;
-  border-bottom:3px solid var(--primary);
-}
+background:linear-gradient(135deg,var(--bg),var(--bg2));
+color:var(--text);font-family:'Crimson Text',serif;font-size:var(--font)}
+header{padding:1.2rem 1.5rem;border-bottom:3px solid var(--primary)}
+.header-top{
+display:flex;align-items:center;gap:1rem}
 header img{width:72px;height:72px}
 h1{
-  font-family:'Playfair Display',serif;
-  font-size:2.3rem;
-  flex:1;
-}
+font-family:'Playfair Display',serif;
+font-size:2.3rem;flex:1}
+.controls{
+display:flex;gap:1rem}
 .controls button{
-  background:none;border:none;color:var(--primary);
-  font-size:1.3rem;cursor:pointer;margin-left:.5rem;
+background:none;border:none;color:var(--accent);
+font-size:1.4rem;cursor:pointer}
+
+@media(max-width:600px){
+.header-top{flex-direction:column;align-items:flex-start}
+.controls{
+margin-top:.6rem;
+width:100%;
+justify-content:flex-start}
 }
 
 .search{padding:1rem 1.5rem}
 .search input{
-  width:100%;padding:.8rem 1rem;border-radius:10px;border:none;font-size:1rem;
-}
-
+width:100%;padding:.8rem 1rem;border-radius:10px;border:none}
 .container{max-width:900px;margin:1.5rem auto;padding:0 1rem}
-
 .playlist-launch{
-  display:flex;
-  justify-content:flex-end;
-  margin-bottom:1rem;
-}
+display:flex;justify-content:flex-end;margin-bottom:1rem}
 .playlist-launch button{
-  background:var(--card);
-  border:2px solid var(--primary);
-  color:var(--primary);
-  padding:.5rem .8rem;
-  border-radius:8px;
-  font-weight:bold;
-  cursor:pointer;
-}
-
+background:var(--card);border:2px solid var(--primary);
+color:var(--accent);padding:.5rem .8rem;border-radius:8px;font-weight:bold}
 .card{
-  background:var(--card);
-  padding:1rem;
-  border-radius:10px;
-  margin-bottom:1rem;
-  cursor:pointer
-}
+background:var(--card);padding:1rem;border-radius:10px;
+margin-bottom:1rem;cursor:pointer}
 .card:hover{outline:2px solid var(--primary)}
 .num{
-  background:var(--primary);
-  color:#000;
-  padding:.2rem .6rem;
-  border-radius:6px;
-  font-weight:bold;
-  margin-right:.5rem
-}
-
+background:var(--primary);color:#000;padding:.2rem .6rem;
+border-radius:6px;font-weight:bold;margin-right:.5rem}
 .overlay{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.9);
-  overflow:auto;
-  z-index:10
-}
+display:none;position:fixed;inset:0;
+background:rgba(0,0,0,.9);overflow:auto;z-index:10}
 .overlay.active{display:block}
-
 .detail,.playlist-panel{
-  background:var(--card);
-  max-width:900px;
-  margin:2rem auto;
-  padding:2rem;
-  border-radius:15px
-}
-
+background:var(--card);max-width:900px;
+margin:2rem auto;padding:2rem;border-radius:15px}
 .back{
-  display:block;
-  margin:1.2rem 0;
-  color:var(--primary);
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.lyrics{
-  white-space:pre-wrap;
-  line-height:1.8;
-  margin:1.5rem 0
-}
-
+display:block;margin:1.2rem 0;color:var(--accent);
+font-weight:bold;cursor:pointer}
+.lyrics{white-space:pre-wrap;line-height:1.8;margin:1.5rem 0}
 audio{width:100%;margin-top:1rem}
-
 .download-btn{
-  display:block;
-  margin:1.2rem 0;
-  color:var(--primary);
-  font-weight:bold;
-  text-decoration:none;
-}
-
+display:block;margin:1.2rem 0;color:var(--accent);
+font-weight:bold;text-decoration:none}
 .playlist-controls{
-  display:flex;
-  gap:1rem;
-  margin-top:1rem;
-  flex-wrap:wrap;
-}
+display:flex;gap:1rem;margin-top:1rem;flex-wrap:wrap}
 .playlist-controls button{
-  background:var(--primary);
-  border:none;
-  padding:.5rem 1rem;
-  border-radius:8px;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.now-playing{
-  margin-top:1rem;
-  font-weight:bold;
-}
+background:var(--primary);border:none;padding:.5rem 1rem;
+border-radius:8px;font-weight:bold}
+.now-playing{margin-top:1rem;font-weight:bold}
 </style>
 </head>
-
 <body>
-
 <header>
-  <img src="https://i.imgur.com/4aZvsOD.png" alt="Logo">
-  <h1>Hinário Ubuntu</h1>
-  <div class="controls">
-    <button onclick="toggleTheme()" title="Alternar tema">🌙</button>
-    <button onclick="font(-1)">A-</button>
-    <button onclick="font(1)">A+</button>
-  </div>
+<div class="header-top">
+<img src="https://i.imgur.com/4aZvsOD.png">
+<h1>Hinário Ubuntu</h1>
+<div class="controls">
+<button onclick="toggleTheme()">🌙</button>
+<button onclick="font(-1)">A-</button>
+<button onclick="font(1)">A+</button>
+</div>
+</div>
 </header>
 
 <div class="search">
-  <input id="search" placeholder="Buscar hino por número ou título...">
+<input id="search" placeholder="Buscar hino por número ou título...">
 </div>
 
 <div class="container">
-  <div class="playlist-launch">
-    <button onclick="openPlaylist()">▶ Playlist</button>
-  </div>
-  <div id="list">Carregando hinos…</div>
+<div class="playlist-launch">
+<button onclick="openPlaylist()">▶ Playlist</button>
+</div>
+<div id="list">Carregando hinos…</div>
 </div>
 
 <div class="overlay" id="overlay">
-  <div class="detail">
-    <span class="back" onclick="closeDetail()">← Voltar ao índice</span>
-    <h2><span id="dnum"></span> – <span id="dtitle"></span></h2>
-    <div class="lyrics" id="dlyrics"></div>
-    <audio id="player" controls style="display:none"></audio>
-    <a id="downloadLink" class="download-btn" href="#" download style="display:none">⬇️ Baixar áudio</a>
-    <span class="back" onclick="closeDetail()">← Voltar ao índice</span>
-  </div>
+<div class="detail">
+<span class="back" onclick="closeDetail()">← Voltar ao índice</span>
+<h2><span id="dnum"></span> – <span id="dtitle"></span></h2>
+<div class="lyrics" id="dlyrics"></div>
+<audio id="player" controls style="display:none"></audio>
+<a id="downloadLink" class="download-btn" download style="display:none">⬇️ Baixar áudio</a>
+<span class="back" onclick="closeDetail()">← Voltar ao índice</span>
+</div>
 </div>
 
 <div class="overlay" id="playlistOverlay">
-  <div class="playlist-panel">
-    <span class="back" onclick="closePlaylist()">← Voltar ao índice</span>
-    <h2>Playlist contínua</h2>
-    <div class="now-playing">
-      Tocando agora: <span id="nowPlaying">—</span>
-    </div>
-    <audio id="playlistPlayer" controls></audio>
-    <div class="playlist-controls">
-      <button onclick="prevTrack()">⏮ Anterior</button>
-      <button onclick="startPlaylist()">▶ Iniciar</button>
-      <button onclick="pausePlaylist()">⏸ Pausar</button>
-      <button onclick="stopPlaylist()">⏹ Parar</button>
-      <button onclick="nextTrack()">⏭ Próximo</button>
-    </div>
-  </div>
+<div class="playlist-panel">
+<span class="back" onclick="closePlaylist()">← Voltar ao índice</span>
+<h2>Playlist contínua</h2>
+<div class="now-playing">Tocando agora: <span id="nowPlaying">—</span></div>
+<audio id="playlistPlayer" controls></audio>
+<div class="playlist-controls">
+<button onclick="prevTrack()">⏮</button>
+<button onclick="startPlaylist()">▶</button>
+<button onclick="pausePlaylist()">⏸</button>
+<button onclick="stopPlaylist()">⏹</button>
+<button onclick="nextTrack()">⏭</button>
+</div>
+</div>
 </div>
 
 <script>
 const CSV_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vRMmvd1DczfnoyH1TzT0eqjCoSw1dkYXMKKcpO5_NbfHJ-d3bDQjlLOJtBk_EwKsiXoq3gGqUC854KC/pub?gid=0&single=true&output=csv";
-
 let hymns=[],playlist=[],currentIndex=0,size=16;
-
 function font(d){
-  size=Math.min(26,Math.max(12,size+d));
-  document.documentElement.style.setProperty('--font',size+'px');
-}
-
-function toggleTheme(){
-  document.body.classList.toggle('light');
-}
-
+size=Math.min(26,Math.max(12,size+d));
+document.documentElement.style.setProperty('--font',size+'px')}
+function toggleTheme(){document.body.classList.toggle('light')}
 function parseCSV(t){
-  const r=[];let row=[],f='',q=false;
-  for(let i=0;i<t.length;i++){
-    const c=t[i],n=t[i+1];
-    if(c=='"'){q&&n=='"'?(f+='"',i++):q=!q}
-    else if(c==','&&!q){row.push(f);f=''}
-    else if((c=='\n'||c=='\r')&&!q){
-      if(f||row.length){row.push(f);r.push(row)}
-      row=[];f='';if(c=='\r'&&n=='\n')i++
-    } else f+=c;
-  }
-  if(f||row.length){row.push(f);r.push(row)}
-  return r.slice(1).map(x=>({num:x[0],title:x[1],lyrics:x[2],audio:x[3]}));
-}
-
+const r=[];let row=[],f='',q=false;
+for(let i=0;i<t.length;i++){
+const c=t[i],n=t[i+1];
+if(c=='"'){q&&n=='"'?(f+='"',i++):q=!q}
+else if(c==','&&!q){row.push(f);f=''}
+else if((c=='\n'||c=='\r')&&!q){
+if(f||row.length){row.push(f);r.push(row)}
+row=[];f='';if(c=='\r'&&n=='\n')i++}
+else f+=c}
+if(f||row.length){row.push(f);r.push(row)}
+return r.slice(1).map(x=>({num:x[0],title:x[1],lyrics:x[2],audio:x[3]}))}
 function render(l){
-  list.innerHTML='';
-  l.forEach(h=>{
-    const d=document.createElement('div');
-    d.className='card';
-    d.innerHTML='<span class="num">'+h.num+'</span>'+h.title;
-    d.onclick=()=>open(h);
-    list.appendChild(d);
-  });
-}
-
+list.innerHTML='';
+l.forEach(h=>{
+const d=document.createElement('div');
+d.className='card';
+d.innerHTML='<span class="num">'+h.num+'</span>'+h.title;
+d.onclick=()=>open(h);
+list.appendChild(d)})}
 function open(h){
-  dnum.textContent=h.num;
-  dtitle.textContent=h.title;
-  dlyrics.textContent=h.lyrics||'';
-  if(h.audio){
-    player.src=h.audio;
-    player.style.display='block';
-    downloadLink.href=h.audio;
-    downloadLink.style.display='block';
-  } else {
-    player.style.display='none';
-    downloadLink.style.display='none';
-  }
-  overlay.classList.add('active');
-}
-
+dnum.textContent=h.num;dtitle.textContent=h.title;
+dlyrics.textContent=h.lyrics||'';
+if(h.audio){
+player.src=h.audio;player.style.display='block';
+downloadLink.href=h.audio;downloadLink.style.display='block'}
+else{
+player.style.display='none';downloadLink.style.display='none'}
+overlay.classList.add('active')}
 function closeDetail(){
-  player.pause(); player.src='';
-  overlay.classList.remove('active');
-}
-
+player.pause();player.src='';overlay.classList.remove('active')}
 function openPlaylist(){
-  playlist=hymns.filter(h=>h.audio);
-  currentIndex=0;
-  playlistOverlay.classList.add('active');
-}
-
+playlist=hymns.filter(h=>h.audio);currentIndex=0;
+playlistOverlay.classList.add('active')}
 function closePlaylist(){
-  playlistPlayer.pause();
-  playlistOverlay.classList.remove('active');
-}
-
+playlistPlayer.pause();playlistOverlay.classList.remove('active')}
 function updateNowPlaying(){
-  if(playlist[currentIndex]){
-    nowPlaying.textContent=playlist[currentIndex].num+" – "+playlist[currentIndex].title;
-  }
-}
-
+if(playlist[currentIndex])
+nowPlaying.textContent=playlist[currentIndex].num+' – '+playlist[currentIndex].title}
 function startPlaylist(){
-  if(!playlist.length) return;
-  playlistPlayer.src=playlist[currentIndex].audio;
-  playlistPlayer.play();
-  updateNowPlaying();
-}
-
+if(!playlist.length)return;
+playlistPlayer.src=playlist[currentIndex].audio;
+playlistPlayer.play();updateNowPlaying()}
 function pausePlaylist(){playlistPlayer.pause()}
 function stopPlaylist(){playlistPlayer.pause();playlistPlayer.currentTime=0}
-function nextTrack(){if(currentIndex<playlist.length-1){currentIndex++;startPlaylist()}}
-function prevTrack(){if(currentIndex>0){currentIndex--;startPlaylist()}}
-
+function nextTrack(){
+if(currentIndex<playlist.length-1){currentIndex++;startPlaylist()}}
+function prevTrack(){
+if(currentIndex>0){currentIndex--;startPlaylist()}}
 playlistPlayer.addEventListener('ended',()=>{
-  if(currentIndex<playlist.length-1){currentIndex++;startPlaylist()}
-});
-
+if(currentIndex<playlist.length-1){currentIndex++;startPlaylist()}})
 fetch(CSV_URL).then(r=>r.text()).then(t=>{
-  hymns=parseCSV(t);
-  render(hymns);
-});
-
+hymns=parseCSV(t);render(hymns)})
 search.oninput=e=>{
-  const v=e.target.value.toLowerCase();
-  render(hymns.filter(h=>h.num.includes(v)||h.title.toLowerCase().includes(v)));
-};
+const v=e.target.value.toLowerCase();
+render(hymns.filter(h=>h.num.includes(v)||h.title.toLowerCase().includes(v)))}
 </script>
-
 </body>
 </html>
