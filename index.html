@@ -46,6 +46,29 @@ h1{
   width:100%;padding:.8rem 1rem;border-radius:10px;border:none;font-size:1rem;
 }
 .container{max-width:900px;margin:1.5rem auto;padding:0 1rem}
+
+.playlist-box{
+  background:var(--card);
+  border-radius:12px;
+  padding:1rem;
+  margin-bottom:1.5rem;
+}
+.playlist-box h3{
+  margin-bottom:.8rem;
+}
+.playlist-box button{
+  background:var(--primary);
+  border:none;
+  padding:.6rem 1rem;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+}
+.playlist-box audio{
+  width:100%;
+  margin-top:.8rem;
+}
+
 .card{
   background:var(--card);padding:1rem;border-radius:10px;margin-bottom:1rem;cursor:pointer
 }
@@ -67,6 +90,13 @@ h1{
 }
 .lyrics{white-space:pre-wrap;line-height:1.8;margin:1.5rem 0}
 audio{width:100%;margin-top:1.5rem}
+.download-btn{
+  display:inline-block;
+  margin-top:.6rem;
+  color:var(--primary);
+  font-weight:bold;
+  text-decoration:none;
+}
 </style>
 </head>
 
@@ -85,7 +115,16 @@ audio{width:100%;margin-top:1.5rem}
   <input id="search" placeholder="Buscar hino por número ou título...">
 </div>
 
-<div class="container" id="list">Carregando hinos…</div>
+<div class="container">
+
+  <div class="playlist-box">
+    <h3>🎧 Tocar todos os hinos</h3>
+    <button onclick="startPlaylist()">▶️ Iniciar playlist</button>
+    <audio id="playlistPlayer" controls></audio>
+  </div>
+
+  <div id="list">Carregando hinos…</div>
+</div>
 
 <div class="overlay" id="overlay">
   <div class="detail">
@@ -93,13 +132,15 @@ audio{width:100%;margin-top:1.5rem}
     <h2><span id="dnum"></span> – <span id="dtitle"></span></h2>
     <div class="lyrics" id="dlyrics"></div>
     <audio id="player" controls style="display:none"></audio>
+    <a id="downloadLink" class="download-btn" href="#" download style="display:none">⬇️ Baixar áudio</a>
     <div class="back" onclick="closeDetail()">← Voltar ao índice</div>
   </div>
 </div>
 
 <script>
 const CSV_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vRMmvd1DczfnoyH1TzT0eqjCoSw1dkYXMKKcpO5_NbfHJ-d3bDQjlLOJtBk_EwKsiXoq3gGqUC854KC/pub?gid=0&single=true&output=csv";
-let hymns=[],size=16;
+
+let hymns=[],size=16,playlist=[],currentIndex=0;
 
 function font(d){
   size=Math.min(26,Math.max(12,size+d));
@@ -139,8 +180,11 @@ function open(h){
   if(h.audio){
     player.src=h.audio;
     player.style.display='block';
+    downloadLink.href=h.audio;
+    downloadLink.style.display='inline-block';
   } else {
     player.style.display='none';
+    downloadLink.style.display='none';
     player.src='';
   }
   overlay.classList.add('active');
@@ -151,8 +195,25 @@ function closeDetail(){
   overlay.classList.remove('active');
 }
 
+function startPlaylist(){
+  playlist=hymns.filter(h=>h.audio);
+  if(!playlist.length) return;
+  currentIndex=0;
+  playlistPlayer.src=playlist[0].audio;
+  playlistPlayer.play();
+}
+
+playlistPlayer.addEventListener('ended',()=>{
+  currentIndex++;
+  if(currentIndex<playlist.length){
+    playlistPlayer.src=playlist[currentIndex].audio;
+    playlistPlayer.play();
+  }
+});
+
 fetch(CSV_URL).then(r=>r.text()).then(t=>{
-  hymns=parseCSV(t); render(hymns);
+  hymns=parseCSV(t);
+  render(hymns);
 });
 
 search.oninput=e=>{
