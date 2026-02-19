@@ -4,7 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hinário Ubuntu</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&family=Nunito:wght@600;700&display=swap" rel="stylesheet">
+
 <style>
 :root{
   --primary:#FFC72C;
@@ -30,47 +32,33 @@ body{
   font-size:var(--font);
 }
 
-/* HEADER */
+/* HEADER PRINCIPAL */
 header{
   padding:1.2rem 1.5rem;
   border-bottom:3px solid var(--primary);
 }
-.header-main{
+.header-wrapper{
   display:flex;
   align-items:center;
   gap:1rem;
 }
 header img{width:72px;height:72px}
 h1{
-  font-family:'Playfair Display',serif;
+  font-family:'Nunito',sans-serif;
   font-size:2.3rem;
+  font-weight:700;
 }
-
-/* CONTROLES */
 .controls{
+  margin-left:auto;
   display:flex;
-  gap:1.2rem;
-  margin-top:.6rem;
+  gap:1rem;
 }
 .controls button{
   background:none;
   border:none;
   color:var(--accent);
-  font-size:1.4rem;
+  font-size:1.3rem;
   cursor:pointer;
-}
-
-/* MOBILE: força controles em linha própria */
-@media (min-width: 601px){
-  .header-wrapper{
-    display:flex;
-    align-items:center;
-    gap:1rem;
-  }
-  .controls{
-    margin-top:0;
-    margin-left:auto;
-  }
 }
 
 .search{padding:1rem 1.5rem}
@@ -114,7 +102,7 @@ h1{
   margin-right:.5rem;
 }
 
-/* OVERLAYS */
+/* OVERLAY DO HINO */
 .overlay{
   display:none;
   position:fixed;
@@ -125,7 +113,7 @@ h1{
 }
 .overlay.active{display:block}
 
-.detail,.playlist-panel{
+.detail{
   background:var(--card);
   max-width:900px;
   margin:2rem auto;
@@ -133,11 +121,23 @@ h1{
   border-radius:15px;
 }
 
-.back{
-  display:block;
-  margin:1.2rem 0;
+.detail-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:1rem;
+}
+.detail-header .back{
   color:var(--accent);
   font-weight:bold;
+  cursor:pointer;
+}
+.detail-controls button{
+  background:none;
+  border:none;
+  color:var(--accent);
+  font-size:1.2rem;
+  margin-left:.5rem;
   cursor:pointer;
 }
 
@@ -157,21 +157,11 @@ audio{width:100%;margin-top:1rem}
   text-decoration:none;
 }
 
-.playlist-controls{
-  display:flex;
-  gap:1rem;
-  margin-top:1rem;
-  flex-wrap:wrap;
+/* RESPONSIVO */
+@media(max-width:600px){
+  .header-wrapper{flex-direction:column;align-items:flex-start}
+  .controls{margin-left:0}
 }
-.playlist-controls button{
-  background:var(--primary);
-  border:none;
-  padding:.5rem 1rem;
-  border-radius:8px;
-  font-weight:bold;
-}
-
-.now-playing{margin-top:1rem;font-weight:bold}
 </style>
 </head>
 
@@ -179,10 +169,8 @@ audio{width:100%;margin-top:1rem}
 
 <header>
   <div class="header-wrapper">
-    <div class="header-main">
-      <img src="https://i.imgur.com/4aZvsOD.png">
-      <h1>Hinário Ubuntu</h1>
-    </div>
+    <img src="https://i.imgur.com/4aZvsOD.png">
+    <h1>Hinário Ubuntu</h1>
     <div class="controls">
       <button onclick="toggleTheme()">🌙</button>
       <button onclick="font(-1)">A-</button>
@@ -204,34 +192,24 @@ audio{width:100%;margin-top:1rem}
 
 <div class="overlay" id="overlay">
   <div class="detail">
-    <span class="back" onclick="closeDetail()">← Voltar ao índice</span>
+    <div class="detail-header">
+      <span class="back" onclick="closeDetail()">← Voltar ao índice</span>
+      <div class="detail-controls">
+        <button onclick="font(-1)">A-</button>
+        <button onclick="font(1)">A+</button>
+      </div>
+    </div>
     <h2><span id="dnum"></span> – <span id="dtitle"></span></h2>
     <div class="lyrics" id="dlyrics"></div>
     <audio id="player" controls style="display:none"></audio>
     <a id="downloadLink" class="download-btn" download style="display:none">⬇️ Baixar áudio</a>
-    <span class="back" onclick="closeDetail()">← Voltar ao índice</span>
-  </div>
-</div>
-
-<div class="overlay" id="playlistOverlay">
-  <div class="playlist-panel">
-    <span class="back" onclick="closePlaylist()">← Voltar ao índice</span>
-    <h2>Playlist contínua</h2>
-    <div class="now-playing">Tocando agora: <span id="nowPlaying">—</span></div>
-    <audio id="playlistPlayer" controls></audio>
-    <div class="playlist-controls">
-      <button onclick="prevTrack()">⏮</button>
-      <button onclick="startPlaylist()">▶</button>
-      <button onclick="pausePlaylist()">⏸</button>
-      <button onclick="stopPlaylist()">⏹</button>
-      <button onclick="nextTrack()">⏭</button>
-    </div>
   </div>
 </div>
 
 <script>
 const CSV_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vRMmvd1DczfnoyH1TzT0eqjCoSw1dkYXMKKcpO5_NbfHJ-d3bDQjlLOJtBk_EwKsiXoq3gGqUC854KC/pub?gid=0&single=true&output=csv";
-let hymns=[],playlist=[],currentIndex=0,size=16;
+
+let hymns=[],size=16;
 
 function font(d){
   size=Math.min(26,Math.max(12,size+d));
@@ -280,33 +258,10 @@ function open(h){
   }
   overlay.classList.add('active');
 }
-function closeDetail(){player.pause();player.src='';overlay.classList.remove('active')}
-
-function openPlaylist(){
-  playlist=hymns.filter(h=>h.audio);
-  currentIndex=0;
-  playlistOverlay.classList.add('active');
+function closeDetail(){
+  player.pause();player.src='';
+  overlay.classList.remove('active');
 }
-function closePlaylist(){playlistPlayer.pause();playlistOverlay.classList.remove('active')}
-
-function updateNowPlaying(){
-  if(playlist[currentIndex])
-    nowPlaying.textContent=playlist[currentIndex].num+' – '+playlist[currentIndex].title;
-}
-function startPlaylist(){
-  if(!playlist.length)return;
-  playlistPlayer.src=playlist[currentIndex].audio;
-  playlistPlayer.play();
-  updateNowPlaying();
-}
-function pausePlaylist(){playlistPlayer.pause()}
-function stopPlaylist(){playlistPlayer.pause();playlistPlayer.currentTime=0}
-function nextTrack(){if(currentIndex<playlist.length-1){currentIndex++;startPlaylist()}}
-function prevTrack(){if(currentIndex>0){currentIndex--;startPlaylist()}}
-
-playlistPlayer.addEventListener('ended',()=>{
-  if(currentIndex<playlist.length-1){currentIndex++;startPlaylist()}
-});
 
 fetch(CSV_URL).then(r=>r.text()).then(t=>{
   hymns=parseCSV(t);
