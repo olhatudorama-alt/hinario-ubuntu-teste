@@ -163,20 +163,24 @@ audio{width:100%;margin-top:1rem}
   .controls{margin-left:0}
 }
 
-.header-wrapper{
+.brand{
   display:flex;
   align-items:center;
   gap:1rem;
-  flex-wrap:nowrap;
-}
-header img{
   flex-shrink:0;
 }
-h1{
+.brand h1{
   white-space:nowrap;
 }
+
 @media(max-width:600px){
-  h1{font-size:1.8rem}
+  .header-wrapper{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+  .controls{
+    margin-top:.6rem;
+  }
 }
 
 </style>
@@ -186,8 +190,10 @@ h1{
 
 <header>
   <div class="header-wrapper">
-    <img src="https://i.imgur.com/4aZvsOD.png">
-    <h1>Hinário Ubuntu</h1>
+    <div class="brand">
+      <img src="https://i.imgur.com/4aZvsOD.png">
+      <h1>Hinário Ubuntu</h1>
+    </div>
     <div class="controls">
       <button onclick="toggleTheme()">🌙</button>
       <button onclick="font(-1)">A-</button>
