@@ -6,6 +6,12 @@
 <title>Hinário Ubuntu</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&family=Nunito:wght@600;700&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#FFC72C">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Hinário Ubuntu">
+<link rel="apple-touch-icon" href="https://i.imgur.com/4aZvsOD.png">
 
 <style>
 :root{
@@ -363,5 +369,10 @@ search.oninput=e=>{
 };
 </script>
 
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+</script>
 </body>
 </html>
