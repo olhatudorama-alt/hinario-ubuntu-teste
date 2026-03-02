@@ -30,7 +30,7 @@
   --text-soft:#6B4C35;
   --shadow:rgba(61,43,31,0.18);
   --primary:#C9A84C;
-  --font:16px;
+  --content-scale: 1; /* ← NOVO: controla escala apenas do conteúdo */
 }
 
 /* DARK MODE — preserva toda a paleta dourada mas escurece o fundo */
@@ -59,7 +59,7 @@ body{
   transition: background .3s, color .3s;
 }
 
-/* ── HEADER ── */
+/* ── HEADER (FIXO - NÃO ESCALA) ── */
 header{
   padding: 1.4rem 1.5rem 1rem;
   border-bottom: 1px solid var(--gold);
@@ -99,7 +99,7 @@ header img{
 }
 h1{
   font-family:'Cinzel',serif;
-  font-size:1.65rem;
+  font-size:1.65rem; /* ← tamanho fixo, não usa rem para não herdar escala */
   font-weight:700;
   letter-spacing:.05em;
   color: var(--text-main);
@@ -149,7 +149,7 @@ h1{
   color: var(--text-main);
 }
 
-/* ── SEARCH ── */
+/* ── SEARCH (FIXO) ── */
 .search{
   padding: 1rem 1.5rem;
   max-width: 900px;
@@ -194,7 +194,7 @@ h1{
   padding:0 1rem;
 }
 
-/* ── PLAYLIST BUTTON ── */
+/* ── PLAYLIST BUTTON (FIXO) ── */
 .playlist-launch{
   display:flex;
   justify-content:flex-end;
@@ -267,11 +267,13 @@ h1{
   letter-spacing:.05em;
 }
 
+/* ← TÍTULO DO HINO NA LISTA - AGORA ESCALONÁVEL */
 .card-title{
   font-family:'Lora',serif;
-  font-size:1rem;
+  font-size: calc(1rem * var(--content-scale));
   color:var(--text-main);
   line-height:1.4;
+  transition: font-size 0.15s ease;
 }
 
 /* ── OVERLAY SHARED ── */
@@ -328,7 +330,7 @@ h1{
 }
 .detail-header .back{
   font-family:'Cinzel',serif;
-  font-size:.8rem;
+  font-size:.8rem; /* ← fixo, não escala */
   letter-spacing:.12em;
   color: var(--gold);
   font-weight:600;
@@ -342,7 +344,7 @@ h1{
   border:1px solid rgba(201,168,76,0.3);
   color:var(--text-soft);
   font-family:'Cinzel',serif;
-  font-size:.78rem;
+  font-size:.78rem; /* ← fixo, não escala */
   padding:.3rem .65rem;
   margin-left:.4rem;
   border-radius:3px;
@@ -351,14 +353,15 @@ h1{
 }
 .detail-controls button:hover{background:rgba(201,168,76,0.25);}
 
-/* detail title */
+/* ← TÍTULO DO HINO NO MODAL - AGORA ESCALONÁVEL */
 .detail h2{
   font-family:'Cinzel',serif;
-  font-size:1.3rem;
+  font-size: calc(1.3rem * var(--content-scale));
   font-weight:600;
   color:var(--text-main);
   line-height:1.35;
   margin-bottom:.4rem;
+  transition: font-size 0.15s ease;
 }
 .detail-divider{
   display:flex;
@@ -372,14 +375,15 @@ h1{
 }
 .detail-divider span{color:var(--gold);font-size:.8rem;}
 
-/* lyrics */
+/* ← LETRA DO HINO - AGORA ESCALONÁVEL */
 .lyrics{
   white-space:pre-wrap;
-  line-height:2;
+  line-height: calc(2 * var(--content-scale));
   margin:0 0 1.5rem;
   font-family:'IM Fell English',serif;
-  font-size:1.05rem;
+  font-size: calc(1.05rem * var(--content-scale));
   color:var(--text-main);
+  transition: font-size 0.15s ease;
 }
 
 /* audio + download */
@@ -411,7 +415,7 @@ audio{
   display:block;
   margin-top:1.5rem;
   font-family:'Cinzel',serif;
-  font-size:.8rem;
+  font-size:.8rem; /* ← fixo */
   letter-spacing:.12em;
   color:var(--gold);
   font-weight:600;
@@ -448,13 +452,15 @@ audio{
   color:var(--brown-deep);
 }
 
+/* ← NOME DA MÚSICA NA PLAYLIST - AGORA ESCALONÁVEL */
 #plNowPlaying{
   font-family:'IM Fell English',serif;
   font-style:italic;
-  font-size:1.05rem;
+  font-size: calc(1.05rem * var(--content-scale));
   color:var(--text-main);
   margin-bottom:1rem;
   line-height:1.55;
+  transition: font-size 0.15s ease;
 }
 
 /* ── SECTION LABEL (empty state) ── */
@@ -549,12 +555,14 @@ audio{
 <script>
 const CSV_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vRMmvd1DczfnoyH1TzT0eqjCoSw1dkYXMKKcpO5_NbfHJ-d3bDQjlLOJtBk_EwKsiXoq3gGqUC854KC/pub?gid=0&single=true&output=csv";
 
-let size=16;
+let scale = 1; // ← Fator de escala inicial (1 = 100%)
 
-function ajustarFonte(d){
-  size=Math.min(26,Math.max(12,size+d));
-  document.documentElement.style.fontSize=size+'px';
+/* ← FUNÇÃO CORRIGIDA: ajusta apenas a variável CSS de escala */
+function ajustarFonte(direcao){
+  scale = Math.min(1.6, Math.max(0.75, scale + (direcao * 0.1)));
+  document.documentElement.style.setProperty('--content-scale', scale);
 }
+
 function toggleTheme(){document.body.classList.toggle('dark')}
 
 function parseCSV(t){
@@ -607,6 +615,7 @@ fetch(CSV_URL).then(r=>r.text()).then(t=>{
   hymns=parseCSV(t);
   render(hymns);
 });
+
 // PLAYLIST
 let plIndex=0,plAudio=document.getElementById('plPlayer');
 
@@ -677,4 +686,8 @@ search.oninput=e=>{
 
 <script>
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>
